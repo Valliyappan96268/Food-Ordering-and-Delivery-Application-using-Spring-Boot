@@ -1,0 +1,28 @@
+package com.example.demowithmany.controller;
+
+import java.security.Principal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demowithmany.model.*;
+import com.example.demowithmany.service.*;
+@Controller
+@RequestMapping("/order")
+public class OrderController {
+    @Autowired
+    OrderService orderService;
+
+    @PostMapping("/place")
+    public String placeOrder(Principal principal) {
+        orderService.placeOrder(principal.getName());
+        return "redirect:/order/confirmation";
+    }
+
+    @GetMapping("/confirmation")
+    public String confirmationPage() {
+        return "order-confirmation";
+    }
+}
