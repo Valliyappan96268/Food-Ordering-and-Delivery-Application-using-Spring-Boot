@@ -1,32 +1,32 @@
 package com.example.demowithmany.controller;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demowithmany.model.*;
-import com.example.demowithmany.service.*;
+import com.example.demowithmany.model.User;
+import com.example.demowithmany.service.UserService;
 
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
-    @Autowired ProductService productService;
-   @GetMapping("/products")
-    public String listProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
-        return "admin/product-list";
+public class AuthController {
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("userDto", new User());
+        return "register";
     }
 
-    @GetMapping("/products/add")
-    public String addProductForm(Model model) {
-        model.addAttribute("product", new Product());
-        return "admin/product-form";
+    @PostMapping("/register")
+    public String processRegister(@ModelAttribute("userDto") User dto) {
+        userService.registerUser(dto.getUsername(), dto.getPassword());
+        return "redirect:/login?registered";
     }
 
-    @PostMapping("/products/save")
-    public String saveProduct(@ModelAttribute Product product) {
-        productService.saveProduct(product);
-        return "redirect:/admin/products";
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
-    // similarly edit, delete
 }
