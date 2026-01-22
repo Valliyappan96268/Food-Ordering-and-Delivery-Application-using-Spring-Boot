@@ -1,0 +1,32 @@
+package com.example.demowithmany.controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demowithmany.model.*;
+import com.example.demowithmany.service.*;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+    @Autowired ProductService productService;
+   @GetMapping("/products")
+    public String listProducts(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
+        return "admin/product-list";
+    }
+
+    @GetMapping("/products/add")
+    public String addProductForm(Model model) {
+        model.addAttribute("product", new Product());
+        return "admin/product-form";
+    }
+
+    @PostMapping("/products/save")
+    public String saveProduct(@ModelAttribute Product product) {
+        productService.saveProduct(product);
+        return "redirect:/admin/products";
+    }
+    // similarly edit, delete
+}
